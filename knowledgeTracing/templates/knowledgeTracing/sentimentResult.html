@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+	Awesome Responsive Template
+	templatestock.co
+-->
+<html>
+<head>
+
+	{% load static %}
+	<title>Feedback</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/bootstrap.min.css' %}">
+
+	<!-- Goggle Font -->
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+
+	<!-- Font Css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/font-awesome.min.css' %}">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/style.css' %}">
+
+	<!-- Animation Css -->
+	<link rel="stylesheet" href="{% static 'home/dkt/css/animate.css' %}">
+<style type="text/css">
+	.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  position: relative;
+  top: -250px;
+  width:500px;
+  height:400px;
+}
+</style>
+
+</head>
+<body>
+	<div class="header-div">
+	<div class="container wow bounceInDown" data-wow-duration="1s">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-8 text-center slide-text">
+			<h1>Feedback type - {{ message }}</h1>
+			<p>For more Accurate Results feed more data. THANK YOU</p>
+		</div><!-- End col-md-8-->
+		<div class="col-md-offset-2"></div><!-- End col-md-offset-2 -->
+	</div><!-- End Row -->
+</div><!-- End Contanier -->
+
+</div><!-- End header-div -->
+{% if message == 'Negative' %}
+<img src="{% static 'home/images/Sorry.png' %}" alt="", class="center">
+{% elif message == 'Neutral' %}
+<img src="{% static 'home/images/thankYou.png' %}" alt="", class="center">
+{% else %}
+<img src="{% static 'home/images/excellent.png' %}" alt="", class="center">
+{% endif %}
+<script type="text/javascript" src="{% static 'home/dkt/js/jquery-main.js' %}"></script>
+<script type="text/javascript" src="{% static 'home/dkt/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'home/dkt/js/wow.min.js' %}"></script>
+
+<script>
+	new WOW().init();
+</script>
+</body>
+</html>

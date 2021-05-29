@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {box-sizing: border-box}
+
+.container {
+  width: 100%;
+  background-color: #ddd;
+}
+
+.skills {
+  text-align: left;
+  margin-top: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  color: white;
+}
+
+.set {background-color: #A03030;}
+</style>
+</head>
+<body>
+
+<h1>Student Learning Level in Various SkillSet</h1>
+{% for skill in skills %}
+  <div class="container">
+    <div class="skills set" style="width: {{ skill.prob }}%">{{ skill.id }} - {{ skill.prob }}%</div>
+  </div>
+{% endfor %}
+
+</body>
+</html>

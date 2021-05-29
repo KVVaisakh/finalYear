@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+  * {
+  box-sizing: border-box;
+}
+
+.row {
+  margin-left:-5px;
+  margin-right:-5px;
+}
+  
+.column {
+  float: left;
+  width: 50%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 16px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #A08080;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #800000;
+  color: white;
+}
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="column">
+  <table id="customers">
+    <tr>
+      <th>Skill Set ID</th>
+      <th>Skill Name</th>
+    </tr>
+    {% for skill in out1 %}
+    <tr>
+      <td>{{skill.id}}</td>
+      <td>{{skill.SkillName}}</td>
+    </tr>
+
+    {% endfor %}
+  </table>
+</div>
+  <div class="column">
+    <table id="customers">
+   <table id="customers">
+    <tr>
+      <th>Skill Set ID</th>
+      <th>Skill Name</th>
+    </tr>
+    {% for skill in out2 %}
+    <tr>
+      <td>{{skill.id}}</td>
+      <td>{{skill.SkillName}}</td>
+    </tr>
+
+    {% endfor %}
+  </table>
+    
+</div>
+</div>
+</body>
+</html>

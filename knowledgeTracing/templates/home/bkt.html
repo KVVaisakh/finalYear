@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+   
+<head>
+  {% load static %}
+      <title>Bayesian Knowledge Tracing</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="HandheldFriendly" content="true">
+      <link rel="icon" href="{% static 'home/bkt/images/fav.png' %}" type="image/png">
+      <link rel="stylesheet" type="text/css" href="{% static 'home/bkt/style.css' %}">
+      <link href="https://fonts.googleapis.com/css?family=Karla|Roboto&amp;display=swap" rel="stylesheet">
+   </head>
+   <body onresize="positionElements()">
+      <div class="intro">
+         <!-- mini balloons -->
+         <div class="mini">
+            <div class="balloon-box"><img class="mini-left" id="mini1" src="{% static 'home/bkt/images/pink.png' %}"
+                 title="mini red balloon" alt="mini red balloon" ></div>
+            <div class="balloon-box"><img class="mini-left" id="mini2" src="{% static 'home/bkt/images/yellow.png' %}"
+                 title="mini yellow balloon" alt="mini yellow balloon" ></div>
+            <div class="balloon-box"><img class="mini-right" id="mini3" src="{% static 'home/bkt/images/green.png' %}"
+                 title="mini green balloon" alt="mini green balloon" ></div>
+            <div class="balloon-box"><img class="mini-right" id="mini4" src="{% static 'home/bkt/images/blue.png' %}"
+                 title="mini blue balloon" alt="mini blue balloon" ></div>
+         </div>
+        <center>
+           <h1 id="mainTitle" style="font-size:40px;letter-spacing:4px">Predicting What Students Know</h1>
+        </center>
+        <center>
+           <h2 id="subtitle">An Introduction to Bayesian Knowledge Tracing</h2>
+        </center>
+        <center><div class="description">
+          <h4>
+            <b>Bayesian Knowledge Tracing</b>, or <b>BKT</b>, is an artificial intelligence
+            algorithm that lets us infer a student's current knowledge state to
+            predict if they have learned a skill.
+            <br /><br />
+            There are four parameters involved in BKT (each with a value between 0 and 1, inclusive):
+            <ul>
+              <li>
+                <b style="color:#A98666">P(known):</b>
+                the probability that the student already knew a skill.
+              </li>
+              <li>
+                <b style="color:#A57380">P(will learn):</b>
+                the probability that the student will learn a skill on the next practice opportunity.
+              </li>
+              <li>
+                <b style="color:#736C9B">P(slip):</b>
+                the probability that the student will answer incorrectly despite knowing a skill.
+              </li>
+              <li>
+                <b style="color:#7499AD">P(guess):</b>
+                the probability that the student will answer correctly despite not knowing a skill.
+              </li>
+            </ul>
+            Every time the student answers a question, our BKT algorithm calculates
+            <b>P(learned)</b>, the probability that the student has learned the skill
+            they are working on, using the values of these parameters.
+            The formula for <b>P(learned)</b> depends on whether their response was correct.
+            <input type="button" class="math" value="See the math" onclick="showMath(this, math)" />
+            <div class="extra" id="math">
+               <br />
+               First, we compute the conditional probability that the student
+               learned the skill previously (at time <i>n-1</i>), based on whether
+               they answered the current question (at time <i>n</i>) correctly or incorrectly.
+               <br />
+               <img class="formula" src="{% static 'home/bkt/images/right-formula.png' %}" title="p learned at time n-1 if correct"
+                    alt="p learned at time n-1 if correct" >
+               <br />
+               <img class="formula" src="{% static 'home/bkt/images/wrong-formula.png' %}" title="p learned at time n-1 if wrong"
+                    alt="p learned at time n-1 if wrong" >
+               <br /><br />
+               Then, we use the result of our first calculation to compute the
+               conditional probability that the student has learned the skill now
+               (at time <i>n</i>).
+               <img id="pL" class="formula" src="{% static 'home/bkt/images/p-learned.png' %}" title="p learned at time n given answer"
+                    alt="p learned at time n given answer" style="width:820px;margin-bottom:-20px;">
+            </div>
+            <br /><br />
+            For the next question, we use <b>P(learned)</b> as the new value of <b>P(known)</b>.
+            Once <b>P(known)</b> ≥ 0.95, we say that the student has achieved
+            <b><i style="color:#A98666">m</i>
+            <i style="color:#A57380">a</i>
+            <i style="color:#736C9B">s</i>
+            <i style="color:#7499AD">t</i>
+            <i style="color:#736C9B">e</i>
+            <i style="color:#A57380">r</i>
+            <i style="color:#A98666">y</i></b>.
+            <br /><br />
+            Now that you’ve had a chance to learn about the four parameters,
+            here’s a tool that can help you visualize the relationships between them
+            and explore how each one influences the probability calculations underlying BKT.
+            We'll be modeling the system with a hot air balloon, using its height as a
+            measure of mastery.
+          </h4>
+          <br />
+          <h2>Let's begin!</h2>
+          <a href="#start">
+             <img class="arrow" src="{% static 'home/bkt/images/down-arrow.png' %}" title="start arrow" alt="start arrow" >
+          </a>
+        </div></center>
+      </div>
+
+      <div class="prompt-container" id="p-contain">
+        <div class="header" id="header">
+           <h1 style="margin-bottom:0;">How to use</h1>
+           <h4 style="margin-top:25px;font-size:17px;">
+              Drag/click the sliders on the right to adjust the parameters and help the balloon rise.
+              Explore on your own or use the following prompts as a guide.
+           </h4>
+        </div>
+        <div class="prompts" id="prompts">
+          <h4>
+            <ol>
+              <li>
+                Find two different parameter combinations that will result in mastery if the student
+                answers correctly. <i>Hint:</i> make <b>P(learned if correct)</b> ≥ 0.95
+                and press "answer correct" to verify your results.
+              </li>
+              <input type="button" class="more" value="More" onclick="showMore(this, more1)" />
+              <ul class="extra" id="more1">
+                 <li>
+                    Recall that <b>P(learned)</b> becomes the new value for <b>P(known)</b>.
+                 </li>
+                <li>
+                  Explore what adjustments you have to make depending on <b>P(known)</b>.
+                  Try a higher <b>P(known)</b> and a lower <b>P(known)</b> and compare your results.
+                </li>
+              </ul>
+              <li>
+                 What happens to <b>P(learned if correct)</b> and <b>P(learned if wrong)</b>
+                 if <b>P(guess)</b> and/or <b>P(slip)</b> exceeds 0.5?
+              </li>
+              <input type="button" class="more second" value="More" onclick="showMore(this, more2)" />
+              <ul class="extra" id="more2">
+                 <li>
+                   <b>P(learned)</b> is higher if the user answers <i>incorrectly</i> vs. <i>correctly</i>.
+                   This is why <b>P(guess)</b> is typically bounded at 0.3 and <b>P(slip)</b> at 0.1.
+                   <a href="#cit3" style="color:#000">[3]</a>
+                 </li>
+                 <li>
+                   Does it make sense why the balloon flips now?
+                 </li>
+              </ul>
+              <li>
+                 What happens to <b>P(learned)</b> if the student answers incorrectly?
+                 <i>Hint:</i> compare <b>P(learned if wrong)</b> with <b>P(known)</b>
+                 (aka. your previous <b>P(learned)</b>).
+              </li>
+              <input type="button" class="more third" value="More" onclick="showMore(this, more3)" />
+              <ul class="extra" id="more3">
+                <li>
+                  Generally, <b>P(learned)</b> is always assumed to increase because BKT
+                  considers every answer, wrong or right, as a learning opportunity that
+                  brings you one step closer to mastery.
+                </li>
+                <li>
+                  However, can you think of a situation where <b>P(learned)</b>
+                  might decrease with a wrong answer? Feel free to try modeling
+                  different scenarios with the sliders using your knowledge
+                  of the BKT parameters.
+                </li>
+              </ul>
+              <li>
+                 Keep exploring! Can you find any other flaws or interesting characteristics of BKT?
+              </li>
+            </ol>
+          </h4>
+        </div>
+      </div>
+      <!-- interactive begins -->
+      <div class="explain" id="start">
+
+         <!-- sliders -->
+         <div class="slidecontainer" id="slidecontain">
+            <input type="button" class="reset" id="res" value="Reset" onclick="reset()" />
+
+            <!-- init -->
+            <div class="des" onmouseenter="displayInfo(iDes)" onmouseleave="hideInfo(iDes)"
+                 style="width:140px">
+               <div class="info" id="iDes" style="top:0;padding-left:140px">
+                  <h4>Controls the balloon's height.</h4>
+               </div>
+               <h3>P(known): <span id="demoI"/></h3>            
+             </div>
+            <input type="range" min="0.0" max="1.0" value="0.5" step="0.01" class="slider"
+                   style="background-image: linear-gradient(to right, #f0c297, #fccfcf)" id="init"
+                   oninput="updateI(this.value)" />
+
+            <!-- trans -->
+            <div class="des" onmouseenter="displayInfo(tDes)" onmouseleave="hideInfo(tDes)"
+                 style="width:155px">
+               <div class="info" id="tDes" style="padding-left:160px;margin-top:-5px">
+                  Changes the storminess and number of clouds to represent learning difficulty.
+               </div>
+               <h3>P(will learn): <span id="demoT"></span></h3>
+            </div>
+            <input type="range" min="0.0" max="1.0" value="0.5" step="0.01" class="slider"
+                   style="background-image: linear-gradient(to right, #f2b3c3, #e0d1e8)" id="trans"
+                   oninput="updateT(this.value)" />
+
+            <!-- slip -->
+            <div class="des" onmouseenter="displayInfo(sDes)" onmouseleave="hideInfo(sDes)"
+                 style="width:115px">
+               <div class="info" id="sDes" style="padding-left:115px">
+                  Certain values will flip the balloon.
+               </div>
+               <h3>P(slip): <span id="demoS"></span></h3>
+            </div>
+            <input type="range" min="0.0" max="1.0" value="0.5" step="0.01" class="slider"
+                   style="background-image: linear-gradient(to right, #d3cef2, #c2dff0)" id="slip"
+                   oninput="updateS(this.value)" />
+
+            <!-- guess -->
+            <div class="des" onmouseenter="displayInfo(gDes)" onmouseleave="hideInfo(gDes)">
+               <div class="info" id="gDes">
+                  Certain values will flip the balloon.
+               </div>
+               <h3>P(guess): <span id="demoG"></span></h3>
+            </div>
+            <input type="range" min="0.0" max="1.0" value="0.5" step="0.01" class="slider" id="guess"
+                   oninput="updateG(this.value)" style="margin-bottom:20px;" />
+
+            <!-- probabilities -->
+            <h4 style="margin-bottom:10px;font-size:17px">
+               Remember, <b>P(learned)</b> depends on whether the student answers correctly
+               and this probability becomes the new value for <b>P(known)</b>.
+               Simulate student responses by choosing an answer button below.
+            </h4>
+
+            <!-- P(learned if correct) -->
+            <div class="left">
+               <h3 style="margin-bottom:0;">P(learned if correct): <span id="correct"></span></h3>
+               <input type="button" class="button" id="learned1" value="Answer Correct"
+                      onclick="changeP(correct, init)" />
+            </div>
+
+            <!-- P(learned if wrong) -->
+            <div class="right">
+               <h3 style="margin-bottom:0">P(learned if wrong): <span id="wrong"></span></h3>
+               <input type="button" class="button" id="learned2" value="Answer Wrong"
+                      onclick="changeP(wrong, init)" />
+            </div>
+
+            <h4 id="hint" style="padding-top:100px;position:absolute;font-style:italic">
+              <b>Hint:</b> hover over the parameters to see how they impact the simulator.
+            </h4>
+         </div>
+      </div>
+
+         <h1 style="text-align:center" id="result"></h1>
+      <!-- game components -->
+      <div class="game" id="game">
+         <div class="clouds">
+            <div class="cloud" id="cloud1"></div>
+            <div class="cloud" id="cloud2" style="float:right;top:315px;"></div>
+            <div class="cloud" id="cloud3" style="top:500px"></div>
+            <div class="cloud" id="cloud4" style="float:right;top:-150px"></div>
+         </div>
+
+         <div class="balloon" id="balloon"></div>
+         <div class="lightwaves" id="lightwaves"></div>
+         <div class="darkwaves" id="darkwaves"></div>
+      </div>
+
+      <footer>
+         <center><div class="references" id="refs">
+            <h2 style="text-align:left">References</h2>
+            <h4>
+               <ol style="font-size:14px;">
+                  <li>
+                     <b>Knowledge Tracing: Modeling the Acquisition of Procedural Knowledge Tracing</b>
+                     <a href="http://act-r.psy.cmu.edu/wordpress/wp-content/uploads/2012/12/893CorbettAnderson1995.pdf">[pdf]</a>
+                     <br />
+                     Corbett, A.T. & Anderson, J.R., 1995.
+                  </li>
+                  <li>
+                     <b>Individualized Bayesian Knowledge Tracing Models</b>
+                     <a href="https://www.cs.cmu.edu/~ggordon/yudelson-koedinger-gordon-individualized-bayesian-knowledge-tracing.pdf">[pdf]</a>
+                     <br />
+                     Yudelson, M.V., Koedinger, K.R. and Gordon, G.J., 2013.
+                  </li>
+                  <li id="cit3">
+                     <b>More Accurate Student Modeling Through Contextual Estimation of Slip and Guess
+                     Probabilities in Bayesian Knowledge Tracing</b>
+                     <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.141.6617&amp;rep=rep1&amp;type=pdf">[pdf]</a>
+                     <br />
+                     d Baker, R.S., Corbett, A.T. and Aleven, V., 2008.
+                  </li>
+               </ol>
+               <br />
+
+            </h4>
+         </div>
+       </center>
+      </footer>
+
+      <script type="text/javascript" src="{% static 'home/bkt/balloon.js' %}"></script>
+   </body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	{% load static %}
+	<title>DKT</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/bootstrap.min.css' %}">
+
+	<!-- Goggle Font -->
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+
+	<!-- Font Css -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/font-awesome.min.css' %}">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="{% static 'home/dkt/css/style.css' %}">
+
+	<!-- Animation Css -->
+	<link rel="stylesheet" href="{% static 'home/dkt/css/animate.css' %}">
+
+
+</head>
+<body>
+<!-- Header -->
+<div class="header-div">
+
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header logo-div bounceInLeft wow" data-wow-duration="2s">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">DKT - {{ model }}</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse top-right-menu-ul bounceInRight wow" id="bs-example-navbar-collapse-1" data-wow-duration="2s">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#Upload">Upload</a></li>
+        <li><a href="#About">About</a></li>
+        {% if model == 'LSTM' %}
+        <li><a href="{% url 'dktGRU' %}">Switch to GRU</a></li>
+        {% else %}
+        <li><a href="{% url 'dktLSTM' %}">Switch to LSTM</a></li>
+        {% endif %}
+      </ul>
+    </div><!-- End navbar-collapse -->
+  </div><!-- End container -->
+</nav>
+
+<div class="container wow bounceInDown" data-wow-duration="1s">
+	<div class="row">
+		<div class="col-md-offset-2 col-md-8 text-center slide-text">
+			<h1>Deep Knowledge Tracing using {{ model }}</h1>
+			<p>Knowledge tracing is the task of modelling student knowledge over time so that we can accurately
+predict how students will perform on future interactions. </p>
+		</div><!-- End col-md-8-->
+		<div class="col-md-offset-2"></div><!-- End col-md-offset-2 -->
+	</div><!-- End Row -->
+</div><!-- End Contanier -->
+
+</div><!-- End header-div -->
+
+<!-- Feature -->
+
+<div class="container" id="features">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="main_heading">
+				<h1>Features</h1>
+				<div  class="text-center"><span class="underline"></span></div>
+			</div>
+		</div><!-- End col-md-12 -->
+	</div><!-- End row -->
+
+	<div class="row">
+		<div class="col-md-3 col-sm-6">
+			<div class="features-div">
+			   <i class="fa fa-mobile"></i>
+			   <h4>Responsive Design</h4>
+			   <p>The site is made attractive with good animations and color schemes</p>
+			</div>
+		</div><!-- End col-md-3-->
+		<div class="col-md-3 col-sm-6">
+			<div class="features-div">
+			   <i class="fa fa-code"></i>
+			   <h4>High Acuracy</h4>
+			   <p>The model used here is having very high accuracy, so the predictions made here will be almost correct.</p>
+			</div>
+		</div><!-- End col-md-3-->
+		<div class="col-md-3 col-sm-6">
+			<div class="features-div">
+			   <i class="fa fa-life-ring"></i>
+			   <h4>Switch between LSTM and GRU</h4>
+			   <p>Can compare the perfomance of the student in different models like LSTM,GRU</p>
+			</div>			
+		</div><!-- End col-md-3-->
+		<div class="col-md-3 col-sm-6">
+			<div class="features-div">
+			   <i class="fa fa-pencil"></i>
+			   <h4>User Friendly</h4>
+			   <p>The site is really user friendly, the user just need to upload the file using a single click to predict the knowledge level of the student</p>
+			</div>			
+		</div><!-- End col-md-3-->
+	</div><!-- End row -->
+</div><!-- End Container -->
+
+<div class="container" id="Upload">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="main_heading">
+				<h1>Upload</h1>
+				<div  class="text-center"><span class="underline"></span></div>
+			</div>
+		</div><!-- End col-md-12 -->
+	</div><!-- End row -->
+
+	<div class="row">
+		<div class="col-md-4 pricing-box-best">
+			<div class="pricing-box">
+            	<div class="pricing-box-price">
+            		<strong>File Upload</strong>
+            	</div>
+                <h3>Select the Text File</h3>
+                <h4>File Format as specified</h4>
+                <div class="pricing-box-features">
+                	<ul>
+                		<li>2D array - (n,2)</li>
+                		<li>1st row contains 2 parameters</li>
+                		<li>1st parameter being skillset id</li>
+                		<li>2nd parameter being whether answered</li>
+                		<li>0 - not answered, 1 - answered</li>
+                	</ul>
+                </div>
+                <div class="pricing-box-sign-up">
+                	<a href="{% url 'dktMap' %}">
+		                <label style="margin: auto"> SkillSet ID Map</label></a>
+		        </div>
+                <form method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+		                <div class="pricing-box-sign-up">
+		                	<label style="margin: auto"> Choose the file
+		                	<input type="file" name="file" />
+		                	</label>
+		                </div>
+		                <div class="pricing-box-sign-up">
+	                <button type="submit" class="btn btn-link-1 scroll-link">Submit</button>
+	                </div>
+	                
+				</form>
+            </div>
+		</div><!-- End col-dm-4 -->
+	</div><!-- End row -->
+
+</div><!-- End container -->
+
+<!-- End Price Table -->
+
+
+<!-- Testimonial -->
+<div class="call-action-color" id="Testimonial">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="main_heading">
+					<h1>About Us</h1>
+					<div  class="text-center"><span class="underline"></span></div>
+				</div>
+			</div><!-- End col-md-12 -->
+		</div><!-- End row -->
+
+		<div class="col-md-12">
+			<p>Developed by a group of final year engineering students...</p>
+		</div><!-- End col-md-12-->
+
+	</div><!-- End container -->	
+</div>
+
+<!-- End Testimonial -->
+
+
+<script type="text/javascript" src="{% static 'home/dkt/js/jquery-main.js' %}"></script>
+<script type="text/javascript" src="{% static 'home/dkt/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'home/dkt/js/wow.min.js' %}"></script>
+
+<script>
+	new WOW().init();
+</script>
+
+</body>
+</html>
